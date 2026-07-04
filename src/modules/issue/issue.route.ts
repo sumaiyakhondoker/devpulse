@@ -1,13 +1,14 @@
 import { Router} from "express";
 import { issueController } from "./issue.controller";
+import auth from "../../middleware/auth";
 
 const router = Router()
 
-router.post('/', issueController.createIssue)
+router.post('/', auth(), issueController.createIssue)
 router.get('/', issueController.getAllIssues)
 router.get('/:id', issueController.getSingleIssue)
-router.patch('/:id', issueController.updateIssue)
-router.delete('/:id', issueController.deleteIssue)
+router.patch('/:id',auth(), issueController.updateIssue)
+// router.delete('/:id', auth('maintainer') issueController.deleteIssue)
 
 
 
