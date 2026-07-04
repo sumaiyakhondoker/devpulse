@@ -1,6 +1,7 @@
 import express, { type Application, type Request, type Response } from 'express'
 import { issueRoute } from './modules/issue/issue.route'
 import globalErrorHandler from './middleware/globalErrorHandler'
+import { authRoute } from './modules/auth/auth.route'
  const app: Application = express()
 
 app.use(express.json())
@@ -9,6 +10,7 @@ app.get('/', (req: Request, res: Response)=>{
 })
 
 app.use('/api/issues', issueRoute)
+app.use('/api/auth', authRoute)
 
 
 app.use(globalErrorHandler)
