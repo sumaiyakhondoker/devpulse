@@ -1,11 +1,11 @@
 import bcrypt from "bcryptjs"
 import { pool } from "../../db"
-import type { IUser, IUserLoginInfo } from "./auth.interface"
+import type { IUserRegisterInfo, IUserLoginInfo } from "./auth.interface"
 import jwt from 'jsonwebtoken'
 import config from "../../config"
 import ms from 'ms';
 
-const createUserIntoDB = async(payload: IUser)=>{
+const createUserIntoDB = async(payload: IUserRegisterInfo)=>{
     const {name, email, password, role} = payload
 
     const hashedPassword = await bcrypt.hash(password, 10)

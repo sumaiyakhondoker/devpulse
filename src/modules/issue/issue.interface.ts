@@ -15,7 +15,7 @@ export interface IIssueDetails {
   updated_at: string;
 }
 
-export interface Iuser {
+export interface IUser {
     id:number;
     name: string;
     email: string;
@@ -25,3 +25,12 @@ export interface Iuser {
   updated_at: string;
 }
 
+export interface IGetAllIssues {
+  sort?: "newest" | "oldest";
+  type?: "bug" | "feature_request";
+  status?: "open" | "in_progress" | "resolved";
+}
+
+export interface IStatus {
+  status: string
+}

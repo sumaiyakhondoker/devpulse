@@ -5,12 +5,14 @@ import auth from "../../middleware/auth";
 
 const router = Router()
 
-router.post('/', auth(UserRoles.maintainer,UserRoles.contributor), issueController.createIssue)
+
+router.post('/', auth(UserRoles.contributor, UserRoles.maintainer), issueController.createIssue)
 router.get('/', issueController.getAllIssues)
 router.get('/:id', issueController.getSingleIssue)
-router.patch('/:id',auth(), issueController.updateIssue)
-router.delete('/:id', auth(), issueController.deleteIssue)
-// router.delete('/:id', auth('maintainer') issueController.deleteIssue)
+router.patch('/:id',auth(UserRoles.contributor, UserRoles.maintainer), issueController.updateIssue)
+router.patch('/issuedetails/:id',auth( UserRoles.maintainer), issueController.updateIssueStatus)
+router.delete('/:id', auth(UserRoles.maintainer), issueController.deleteIssue)
+
 
 
 

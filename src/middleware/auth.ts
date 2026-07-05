@@ -1,3 +1,4 @@
+import { UserRoles } from './../types/index';
 import  jwt, { type JwtPayload }  from 'jsonwebtoken';
 import type { NextFunction, Request, Response } from "express";
 import config from '../config';
@@ -5,13 +6,13 @@ import { pool } from '../db';
 import sendResponse from '../utility/sendResponse';
 import type { TRoles } from '../types';
 
-const auth = (...roles:TRoles[]) => {
+const auth = (...rolesAllowed:TRoles[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // console.log("from header", req.headers.authorization);
    try {
      const token = req.headers.authorization;
     if (!token) {
-      res.status(401).json({
+     return res.status(401).json({
         success: false,
         message: "Unauthorized access"
       });
@@ -27,7 +28,7 @@ const auth = (...roles:TRoles[]) => {
 
 
         if( result.rows.length === 0){
-            sendResponse(res, {
+          return sendResponse(res, {
             statusCode: 404,
             success: false,
             message: "User not found"
@@ -38,23 +39,30 @@ const auth = (...roles:TRoles[]) => {
         req.user = user
 
 
-      if(!roles.length && roles.includes(user.role)){
-        sendResponse(res, {
-            statusCode: 403,
-            success: false,
-            message: "Forbidden. Only contributors and maintainers can create issues.",
-         
-        })
-      }
-      if(!roles.length && user.role=== 'maintainer'){
-        sendResponse(res, {
-            statusCode: 403,
-            success: false,
-            message: "Forbidden. Only maintainers can delete issues.",
-         
-        })
-      }
+        console.log("Allowed Roles:", rolesAllowed);
+console.log("User Role:",  user.role);
 
+      // if(rolesAllowed.length && !rolesAllowed.includes(user.role)){
+      //  return sendResponse(res, {
+      //       statusCode: 403,
+      //       success: false,
+      //       message: "Forbidden. Only contributors and maintainers can create issues.",
+         
+      //   })
+      // }
+
+   
+      // if(rolesAllowed.length && user.role !== UserRoles.maintainer){
+      //  return sendResponse(res, {
+      //       statusCode: 403,
+      //       success: false,
+      //       message: "Forbidden. Only maintainers can delete issues.",
+         
+      //   })
+      // }
+
+    
+console.log("Passed Auth Middleware");
     next();
    } catch (error) {
     next(error)
