@@ -3,15 +3,16 @@ import sendResponse from "../../utility/sendResponse"
 import { issueService } from "./issue.service"
 
 const createIssue = async(req: Request, res: Response, next: NextFunction)=>{
+   const reporterId =req?.user?.id
     try {
        
-        const result = await issueService.createIssueIntoDB(req.body)
-
+        const result = await issueService.createIssueIntoDB(req.body, reporterId)
+        
         sendResponse(res, {
             statusCode: 201,
             success: true,
             message: "Issue created successfully",
-            data: result.rows[0]
+            data: {...result.rows[0], reporter_id: reporterId}
         })
     //    console.log(result);
     } catch (error: any) {
@@ -22,29 +23,31 @@ const createIssue = async(req: Request, res: Response, next: NextFunction)=>{
 }
 
 const getAllIssues = async(req: Request, res: Response, next: NextFunction)=>{
+    
  try {
         
         const result = await issueService.getAllIssuesFromDB()
+    
+    //    console.log(result);
 
-        if(result.rows.length > 0){
+       if(result.length > 0){
  sendResponse(res, {
             statusCode: 200,
             success: true,
             message: "Issues retrived successfully",
-            data: result.rows
+            data: result
         })
         }else{
 
             sendResponse(res, {
             statusCode: 404,
             success: false,
-            message: "Issues not found",
+            message: "Issues not found. Please create a new issue",
             data:{}
         })
             
         }
        
-    //    console.log(result);
 
     } catch (error: any) {
         next(error)
@@ -56,23 +59,25 @@ const getAllIssues = async(req: Request, res: Response, next: NextFunction)=>{
 const getSingleIssue = async(req: Request, res: Response, next: NextFunction)=>{
  try {
        const {id} = req.params
+    //    console.log(typeof id);
         const result = await issueService.getSingleIssueFromDB(id as string)
 
-if(result.rows.length > 0){
-  sendResponse(res, {
-            statusCode: 200,
-            success: true,
-            message: "Issue retrived successfully",
-            data: result.rows[0]
-        })
-        }else{
-
-            sendResponse(res, {
+if(!result){
+     sendResponse(res, {
             statusCode: 404,
             success: false,
             message: "No issue found",
             data:{}
         })
+  
+        }else{sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Issue retrived successfully",
+            data: result
+        })
+
+           
             
         }  
     //    console.log(result);

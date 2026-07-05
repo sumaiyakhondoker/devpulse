@@ -1,7 +1,9 @@
-// declare global {
-//   namespace Express {
-//     interface Request {
-//       user?:               // Extends the Express global Request definition
-//     }
-//   }
-// }
+import type { JwtPayload } from "jsonwebtoken";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JwtPayload
+    }
+  }
+}
