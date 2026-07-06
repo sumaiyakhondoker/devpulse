@@ -3,7 +3,7 @@ import sendResponse from "../../utility/sendResponse";
 import { issueService } from "./issue.service";
 import type { IGetAllIssues, IUser } from "./issue.interface";
 import type { JwtPayload } from "jsonwebtoken";
-import { IssueStatus } from "../../types";
+import { IssueStatus, UserRoles } from "../../types";
 
 const createIssue = async (req: Request, res: Response, next: NextFunction) => {
   const reporterId = req?.user?.id;
@@ -89,17 +89,24 @@ const getSingleIssue = async (
 
 const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
     const user= req?.user
-    // console.log(user);
+    console.log(typeof UserRoles.maintainer );
   try {
     const { id } = req.params;
+    if(user?.role !== "maintainer" && user?.role !== "contributor"){
+     return sendResponse(res, {
+        statusCode: 403,
+        success: false,
+        message: "Forbidden. Only contributors and maintainers can update issues."
+        
+      })
+    }
     const result = await issueService.updateIssueIntoDB(req.body, id as string, user);
     // console.log(result);
-
      if (!result) {
       sendResponse(res, {
         statusCode: 403,
         success: false,
-        message: "No issue updated because contributor can only update his own issue, only if the reporter status is open"
+        message: "No issue updated because contributor can only update his own issue, only if the issue status is open"
         
       });
     } else{
@@ -182,7 +189,6 @@ return sendResponse(res, {
 };
 const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("Delete Controller Hit");
     const { id } = req.params;
     const result = await issueService.deleteIssueFromDB(id as string);
     if (result.rowCount === 0) {
@@ -192,14 +198,16 @@ const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
         message: "Issue already deleted!",
         data: {},
       });
-    }
-
-    sendResponse(res, {
+    }else{
+      sendResponse(res, {
       statusCode: 200,
       success: true,
       message: "Issue deleted successfully",
       data: {},
     });
+    }
+
+    
   } catch (error: any) {
     next(error);
   }
