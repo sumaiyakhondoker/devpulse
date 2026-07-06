@@ -6,8 +6,19 @@ import type { JwtPayload } from "jsonwebtoken";
 import { IssueStatus, UserRoles } from "../../types";
 
 const createIssue = async (req: Request, res: Response, next: NextFunction) => {
-  const reporterId = req?.user?.id;
+ 
   try {
+  const reporterId = req?.user?.id;
+
+   const validIssueTypes = ["bug" , "feature_request"]
+   if(!validIssueTypes.includes(req.body.type)){
+    return sendResponse(res, {
+      statusCode: 400,
+      success: false,
+      message: "Please give a valid issue type like 'bug' or 'feature_request' ",
+    
+    });
+   }
     const result = await issueService.createIssueIntoDB(req.body, reporterId);
 
     sendResponse(res, {
@@ -31,9 +42,10 @@ const getAllIssues = async (
 ) => {
   try {
     const queryParams:IGetAllIssues = req.query;
+    console.log(queryParams);
     const result = await issueService.getAllIssuesFromDB(queryParams);
 
-    //    console.log(result);
+       console.log(result);
 
     if (result.length > 0) {
       sendResponse(res, {

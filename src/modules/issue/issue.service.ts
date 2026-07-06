@@ -23,15 +23,35 @@ const getAllIssuesFromDB =  async(queryParams: IGetAllIssues)=>{
     const sort = queryParams.sort === 'oldest' ? 'ASC' : 'DESC'
     const status = queryParams.status
     const type = queryParams.type
-    const issuesData = await pool.query(`
-         SELECT * FROM issues`
-        )
-        //  SELECT * FROM issues WHERE status=$1 AND type=$2 ORDER BY created_at ${sort}`,[status, type]
+
+
+    let query = `SELECT * FROM issues`
+    const conditions = []
+    const values = []
+    if(status){
+        conditions.push(`status=$${values.length + 1}`)
+        values.push(status)
+    }
+
+
+    if(type){
+        conditions.push(`type=$${values.length + 1}`)
+        values.push(type)
+    }
+
+    if(conditions.length > 0){
+        query+= ` WHERE ${conditions.join(" AND ")}`
+    }
+
+   query+=` ORDER BY created_at ${sort}`
+
+console.log('query:',query, 'values:', values);
+    const issuesData = await pool.query(query, values)
 
         
 
          const issues = issuesData.rows
-         console.log(issues);
+        //  console.log(issues);
          const reporterIds = issues.map((issue) => issue.reporter_id)
          const uniqueReporterIds = [...new Set(reporterIds)];
          

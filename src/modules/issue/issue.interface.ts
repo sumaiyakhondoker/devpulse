@@ -31,6 +31,7 @@ export interface IGetAllIssues {
   status?: "open" | "in_progress" | "resolved";
 }
 
+
 export interface IStatus {
   status: string
 }
