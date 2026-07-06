@@ -6,7 +6,7 @@ import { pool } from '../db';
 import sendResponse from '../utility/sendResponse';
 import type { TRoles } from '../types';
 
-const auth = (...rolesAllowed:TRoles[]) => {
+const auth = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // console.log("from header", req.headers.authorization);
    try {
@@ -39,29 +39,7 @@ const auth = (...rolesAllowed:TRoles[]) => {
         req.user = user
 
 
-        console.log("Allowed Roles:", rolesAllowed);
 console.log("User Role:",  user.role);
-
-      // if(rolesAllowed.length && !rolesAllowed.includes(user.role)){
-      //  return sendResponse(res, {
-      //       statusCode: 403,
-      //       success: false,
-      //       message: "Forbidden. Only contributors and maintainers can create issues.",
-         
-      //   })
-      // }
-
-   
-      // if(rolesAllowed.length && user.role !== UserRoles.maintainer){
-      //  return sendResponse(res, {
-      //       statusCode: 403,
-      //       success: false,
-      //       message: "Forbidden. Only maintainers can delete issues.",
-         
-      //   })
-      // }
-
-    
 console.log("Passed Auth Middleware");
     next();
    } catch (error) {

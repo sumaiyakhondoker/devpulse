@@ -167,21 +167,18 @@ if(!issue){
 const updateIssueStatusIntoDB =async (payload: IStatus, id : string)=>{
     const {status} = payload
 
-    const issuesData = await pool.query(`
-         SELECT * FROM issues 
+     const issuesData = await pool.query(`
+         SELECT * FROM issues WHERE id=$1
         
-         `)
+         `,[id])
 
-    const issues = issuesData.rows
-   
-  
-const issueIds = issues.map((issue:IIssueDetails) => Number(issue.id)) as Array<number>
-if(!issueIds.includes(Number(id))){
+    const issue = issuesData.rows[0]
+if(!issue){
     throw new Error("This issue is not found. Please provide a proper issue id")
 }
 
 
-    const result = await pool.query(`
+    const issueData = await pool.query(`
         UPDATE issues 
         SET status = COALESCE($1, status),
         updated_at = NOW()
@@ -190,6 +187,7 @@ if(!issueIds.includes(Number(id))){
 
         `, [status,id])
 
+        const result = issueData.rows[0]
         return result
 }
 

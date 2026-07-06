@@ -3,6 +3,7 @@ import sendResponse from "../../utility/sendResponse";
 import { issueService } from "./issue.service";
 import type { IGetAllIssues, IUser } from "./issue.interface";
 import type { JwtPayload } from "jsonwebtoken";
+import { IssueStatus } from "../../types";
 
 const createIssue = async (req: Request, res: Response, next: NextFunction) => {
   const reporterId = req?.user?.id;
@@ -87,7 +88,7 @@ const getSingleIssue = async (
 };
 
 const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
-    const user = req?.user
+    const user= req?.user
     // console.log(user);
   try {
     const { id } = req.params;
@@ -122,8 +123,28 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateIssueStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const { id } = req?.params;
+    const user= req?.user
+
+
+    if(user?.role !== "maintainer"){
+return sendResponse(res, {
+      statusCode: 403,
+      success: false,
+      message: "Forbidden: only maintainer can update the issue status"
+    });
+    }
+
     if(!req.body.status){
+        return sendResponse(res, {
+      statusCode: 400,
+      success: false,
+      message: "Please give status property and its value in request body",
+      data: {}
+    });
+    }
+    const validStatus = [IssueStatus.open, IssueStatus.in_progress, IssueStatus.resolved]
+     if(!validStatus.includes(req.body.status)){
         return sendResponse(res, {
       statusCode: 400,
       success: false,
@@ -131,14 +152,29 @@ const updateIssueStatus = async (req: Request, res: Response, next: NextFunction
       data: {}
     });
     }
-    const result = await issueService.updateIssueStatusIntoDB(req.body, id as string);
 
-    sendResponse(res, {
+
+    const result = await issueService.updateIssueStatusIntoDB(req.body, id as string);
+    // console.log(result);
+  
+
+
+    if (!result) {
+      sendResponse(res, {
+        statusCode: 404,
+        success: false,
+        message: "No issue found"
+        
+      });
+    } else{
+        sendResponse(res, {
       statusCode: 200,
       success: true,
       message: "Issue status updated successfully",
-      data: result.rows[0],
+      data: result
     });
+    }
+    
     //    console.log(result);
   } catch (error: any) {
     next(error);
