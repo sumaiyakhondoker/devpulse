@@ -5,17 +5,18 @@ import { UserRoles } from "../../types"
 
 const createUser =async(req: Request, res: Response, next: NextFunction)=>{
  try {
+    const requestedRole = req.body.role ?  req.body.role : "contributor"
 
-    // const validRoles = [UserRoles.contributor, UserRoles.maintainer]
-    //  const role = req.body?.role
-    //     if(!validRoles.includes(role)){
-    //         return sendResponse(res, {
-    //         statusCode: 400,
-    //         success: false,
-    //         message: "Failed to create user. Please try with a valid role",
-    //         data:{}
-    //     })
-    //     }
+    const validRoles = [UserRoles.contributor, UserRoles.maintainer]
+     const role = requestedRole
+        if(!validRoles.includes(role)){
+            return sendResponse(res, {
+            statusCode: 400,
+            success: false,
+            message: "Failed to create user. Please try with a valid role",
+            data:{}
+        })
+        }
         const result = await authService.createUserIntoDB(req.body)
        
 if(result.rows.length === 0){

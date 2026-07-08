@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from "express";
 import sendResponse from "../../utility/sendResponse";
 import { issueService } from "./issue.service";
 import type { IGetAllIssues, IUser } from "./issue.interface";
-import type { JwtPayload } from "jsonwebtoken";
 import { IssueStatus, UserRoles } from "../../types";
 
 const createIssue = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,7 +26,7 @@ const createIssue = async (req: Request, res: Response, next: NextFunction) => {
       message: "Issue created successfully",
       data: result
     });
-    //    console.log(result);
+  
   } catch (error: any) {
     next(error);
   }
@@ -45,7 +44,7 @@ const getAllIssues = async (
     console.log(queryParams);
     const result = await issueService.getAllIssuesFromDB(queryParams);
 
-       console.log(result);
+      
 
     if (result.length > 0) {
       sendResponse(res, {
@@ -174,7 +173,7 @@ return sendResponse(res, {
 
 
     const result = await issueService.updateIssueStatusIntoDB(req.body, id as string);
-    // console.log(result);
+    
   
 
 
@@ -193,8 +192,7 @@ return sendResponse(res, {
       data: result
     });
     }
-    
-    //    console.log(result);
+  
   } catch (error: any) {
     next(error);
   }

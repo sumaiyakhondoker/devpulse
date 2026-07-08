@@ -9,8 +9,8 @@ app.get('/', (req: Request, res: Response)=>{
     res.status(200).json({"message": "Welcome to DevPulse!!", author: 'Sumaiya Khondoker Nabila'})
 })
 
-app.use('/api/issues', issueRoute)
 app.use('/api/auth', authRoute)
+app.use('/api/issues', issueRoute)
 
 
 app.use(globalErrorHandler)

@@ -1,7 +1,5 @@
 import { pool } from "../../db"
 import type { IGetAllIssues, IIssueBody, IIssueDetails, IStatus, IUser} from "./issue.interface"
-import { UserRoles } from "../../types"
-import sendResponse from "../../utility/sendResponse"
 
 const createIssueIntoDB = async(payload: IIssueBody, reporterId: number)=>{
      const {title, description, type} = payload
@@ -51,7 +49,7 @@ console.log('query:',query, 'values:', values);
         
 
          const issues = issuesData.rows
-        //  console.log(issues);
+     
          const reporterIds = issues.map((issue) => issue.reporter_id)
          const uniqueReporterIds = [...new Set(reporterIds)];
          
