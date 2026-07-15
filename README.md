@@ -31,13 +31,28 @@ https://github.com/sumaiyakhondoker/devpulse
 - cors
 
 ## Setup
-1. Clone the repository
-git clone ...(Here will be the github clone URL)
-2. Install all dependencies
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/sumaiyakhondoker/devpulse.git
+cd devpulse
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
-3. Create .env file 
-4. Start the server 
+```
+
+### 3. Create a `.env` file
+
+Create a `.env` file in the project root and add the required environment variables.
+
+### 4. Start the development server
+
+```bash
 npm run dev
+```
 
 ## API endpoint list
 

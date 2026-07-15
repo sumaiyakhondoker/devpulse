@@ -749,7 +749,9 @@ router2.post("/login", authController.loginUser);
 var authRoute = router2;
 
 // src/app.ts
+import cors from "cors";
 var app = express();
+app.use(cors());
 app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).json({ "message": "Welcome to DevPulse!!", author: "Sumaiya Khondoker Nabila" });
