@@ -41,7 +41,7 @@ const getAllIssues = async (
 ) => {
   try {
     const queryParams:IGetAllIssues = req.query;
-    console.log(queryParams);
+    // console.log(queryParams);
     const result = await issueService.getAllIssuesFromDB(queryParams);
 
       
@@ -100,7 +100,7 @@ const getSingleIssue = async (
 
 const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
     const user= req?.user
-    console.log(typeof UserRoles.maintainer );
+    // console.log(typeof UserRoles.maintainer );
   try {
     const { id } = req.params;
     if(user?.role !== "maintainer" && user?.role !== "contributor"){
@@ -131,7 +131,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
         
     
   
-    //    console.log(result);
+   
   } catch (error: any) {
     next(error);
   }

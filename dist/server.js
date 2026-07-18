@@ -255,7 +255,6 @@ var getAllIssuesFromDB = async (queryParams) => {
     query += ` WHERE ${conditions.join(" AND ")}`;
   }
   query += ` ORDER BY created_at ${sort}`;
-  console.log("query:", query, "values:", values);
   const issuesData = await pool.query(query, values);
   const issues = issuesData.rows;
   const reporterIds = issues.map((issue) => issue.reporter_id);
@@ -421,7 +420,6 @@ var createIssue = async (req, res, next) => {
 var getAllIssues = async (req, res, next) => {
   try {
     const queryParams = req.query;
-    console.log(queryParams);
     const result = await issueService.getAllIssuesFromDB(queryParams);
     if (result.length > 0) {
       sendResponse_default(res, {
@@ -467,7 +465,6 @@ var getSingleIssue = async (req, res, next) => {
 };
 var updateIssue = async (req, res, next) => {
   const user = req?.user;
-  console.log(typeof UserRoles.maintainer);
   try {
     const { id } = req.params;
     if (user?.role !== "maintainer" && user?.role !== "contributor") {

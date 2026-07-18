@@ -2,10 +2,7 @@
 DevPulse is a RESTful backend application for tracking software bugs and feature requests. It allows users to register, log in, create and manage issues based on their roles. The project is built with Node.js, Express.js, TypeScript, PostgreSQL, and JWT authentication
 
 ## Live URL
-https://devpulse-assignment-2-olive.vercel.app/
-
-## Github Repository
-https://github.com/sumaiyakhondoker/devpulse
+https://devpulse-assignment-2-olive.vercel.app
 
 ## Features
 - User Registration

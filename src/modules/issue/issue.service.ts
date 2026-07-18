@@ -43,7 +43,7 @@ const getAllIssuesFromDB =  async(queryParams: IGetAllIssues)=>{
 
    query+=` ORDER BY created_at ${sort}`
 
-console.log('query:',query, 'values:', values);
+
     const issuesData = await pool.query(query, values)
 
         
@@ -141,7 +141,7 @@ if(!issue){
     throw new Error("This issue is not found. Please provide a proper issue id")
 }
 
-// console.log(typeof user.role)
+
 
 
     if(user.role === "maintainer"){
